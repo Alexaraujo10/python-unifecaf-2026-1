@@ -48,10 +48,11 @@ def listarProdutos():
     if(len(produtos) == 0):
         print('Não tem produtos cadastrados')
     for p in produtos:
-        print(f'{p['nome']} ... R$ {p['preco']:.2f}')
-        
+        print(f"{p['nome']} ... R$ {p['preco']:.2f}")
+       
         
 def adicionarProduto(produto):
+    produtos.append(produto)
     return 
 
 

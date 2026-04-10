@@ -57,15 +57,22 @@ def adicionarProduto(produto):
 
 
 def buscarProduto(produtoNome):
-    return 
+    for i in range(len(produtos)):
+        if produtos[i]['nome'] == produtoNome:
+            return i
+    return None
 
 
 def atualizarProduto(indice, produto):
-    return 
+   def atualizarProduto(indice, produto):
+    produtos[indice] = produto
+    return True
 
 
 def removerProduto(indice):
-    return 
+     produtos.pop(indice)
+     return True
+    
 
 
 
@@ -100,12 +107,40 @@ while(opcao != '0'):
     
     elif(opcao == '3'): 
          print('BUSCAR PRODUTO =========================')
-    
+         busca = input('Nome: ')
+         indice = buscarProduto(busca)
+         if indice != None:
+             print('Produto encontrado', indice, produtos[indice])
+         else:
+             print('Produto não encontrado')
+
     elif(opcao == '4'): 
-         print('ATUALIZAR PRODUTO ======================')
+        print('ATUALIZAR PRODUTO ======================')
+        busca = input('Nome: ')
+        indice = buscarProduto(busca)
+
+        if indice != None:
+            nome = input('Novo nome: ')
+            preco = float(input('Novo preço: '))
+            
+            atualizarProduto(indice, {'nome': nome, 'preco': preco})
+            print('Produto atualizado!')
+        else:
+            print('Produto não encontrado')         
+    
+    
     
     elif(opcao == '5'): 
          print('REMOVER PRODUTO ========================')
+         #Procura o produto
+         busca = input('Nome: ')
+         indice = buscarProduto(busca)
+         #Se existir, remove da lista
+         if indice != None:
+            removerProduto(indice)
+            print('Produto removido!')
+         else:
+            print('Produto não encontrado')
     
     elif(opcao != None): 
         print('Opção não existe')    

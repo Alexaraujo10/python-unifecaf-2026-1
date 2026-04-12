@@ -57,6 +57,7 @@ def adicionarProduto(produto):
 
 
 def buscarProduto(produtoNome):
+    
     for i in range(len(produtos)):
         if produtos[i]['nome'] == produtoNome:
             return i
@@ -132,10 +133,10 @@ while(opcao != '0'):
     
     elif(opcao == '5'): 
          print('REMOVER PRODUTO ========================')
-         #Procura o produto
+         
          busca = input('Nome: ')
          indice = buscarProduto(busca)
-         #Se existir, remove da lista
+         
          if indice != None:
             removerProduto(indice)
             print('Produto removido!')

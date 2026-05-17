@@ -6,7 +6,7 @@ def conectar():
         conexao = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='root',
+            password='1911',
             database='projeto_vendas_eletronicos_unifecaf'
         )
 
@@ -23,3 +23,4 @@ def fechar_conexao(conexao):
     if conexao and conexao.is_connected():
         conexao.close()
         print("Conexão encerrada.")
+

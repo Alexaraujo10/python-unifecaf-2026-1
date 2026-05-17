@@ -4,3 +4,4 @@
 # - estrutura do for: for i in range(inicio, fim-1)
 # - use input para ler o número n
 # - % retorna o resto de uma divisão ( 9 % 3 == 0)
+

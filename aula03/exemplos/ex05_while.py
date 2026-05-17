@@ -12,3 +12,5 @@ if not conexaoDB:
     print('Não foi possível conectar após', tentativas, 'tentativas')
 else:
     print('Conectado com sucesso!')
+
+    

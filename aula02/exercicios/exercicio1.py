@@ -5,6 +5,6 @@ usuario_ativo = True
 if not (not usuario_ativo):
     print("Usuário ativo")
 else:
-    print("Usuário inativo")
+  print("Usuário inativo")
 
-# seu código aqui abaixo:
+#seu código aqui abaixo:

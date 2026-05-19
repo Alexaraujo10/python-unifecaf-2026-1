@@ -2,18 +2,59 @@
 # PROJETO DE VENDAS - parte 2
 # Exercicios de CRUD completo (Produtos, Vendedores e Vendas)
 # Entrega - dia 24/05/2026
-
+from banco_de_dados.conexao import conectar, fechar_conexao
+from datetime import datetime
 
 # PRODUTOS
 
 def criar_produto():
     # Exercicio 1: cadastrar um novo produto na tabela produtos (descricao, preco).
+    try:
+        conexao = conectar()
+        cursor = conexao.cursor()
+        produto = input('Digite o nome do produto: ')
+        preco = float(input('Digite o preço do produto: '))
+
+        cursor.execute(
+            "INSERT INTO produtos (descricao, preco) VALUES (%s, %s)", 
+            (produto, preco)
+        )
+        conexao.commit() 
+        print("Produto registrado!")
+       
+
+    
+    finally:
+        cursor.close()
+        fechar_conexao(conexao)    
+    
     return
 
 
 def listar_produtos():
     # Exercicio 2: listar todos os produtos cadastrados com id, descricao e preco.
-    return
+    print('=== Lista de Produtos  ===')
+    
+    try: 
+        conexao = conectar()
+        cursor = conexao.cursor()
+
+        cursor.execute(
+            "select * from produtos"
+        )
+        print('Lista de Produtos:  ')
+
+        produtos =  cursor.fetchall()
+        print(produtos)
+        for p in produtos:
+            descricao, preco = p[1], p[2]
+            print(f"{p[0]} | {descricao} | R$ {preco:.2f}")
+    
+
+    finally:
+        cursor.close()
+        fechar_conexao(conexao)
+    return 
 
 
 def atualizar_produto():
@@ -105,3 +146,6 @@ def menu():
             print("Exercicio em estrutura base (return vazio).")
         else:
             print("Opcao invalida. Tente novamente.")
+       
+menu()
+

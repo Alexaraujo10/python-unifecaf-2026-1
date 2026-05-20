@@ -9,6 +9,7 @@ from datetime import datetime
 
 def criar_produto():
     # Exercicio 1: cadastrar um novo produto na tabela produtos (descricao, preco).
+    print('=== Adicione um Produto ===')
     try:
         conexao = conectar()
         cursor = conexao.cursor()
@@ -35,7 +36,7 @@ def listar_produtos():
     # Exercicio 2: listar todos os produtos cadastrados com id, descricao e preco.
     print('=== Lista de Produtos  ===')
     
-    try: 
+    try:
         conexao = conectar()
         cursor = conexao.cursor()
 
@@ -49,21 +50,61 @@ def listar_produtos():
         for p in produtos:
             descricao, preco = p[1], p[2]
             print(f"{p[0]} | {descricao} | R$ {preco:.2f}")
-    
 
     finally:
         cursor.close()
         fechar_conexao(conexao)
     return 
 
+    
+
 
 def atualizar_produto():
     # Exercicio 3: atualizar descricao e/ou preco de um produto existente por id.
+    print('=== Atualize um Produto ===')
+
+    try:
+        conexao = conectar()
+        cursor = conexao.cursor()
+
+        attproduto = input('Digite o novo nome: ')
+        attpreco = float(input('Digite o novo preço: '))
+
+
+        cursor.execute(
+
+    
+
+
+        )
+
+    finally:
+        cursor.close()
+        fechar_conexao(conexao)
+
     return
 
 
 def excluir_produto():
     # Exercicio 4: excluir um produto por id, tratando dependencias em vendas_produtos.
+    
+    try:
+        conexao = conectar()
+        cursor = conexao.cursor()
+        deldependencia = int(input('Digite o id do produto: '))
+        delproduto = int(input('Digite o id do produto: '))
+
+        # remover dependências em vendas_produtos primeiro
+        cursor.execute("DELETE FROM vendas_produtos WHERE id_produto = %s", (deldependencia,))
+        # remover o produto
+        cursor.execute("DELETE FROM produtos WHERE id = %s", (delproduto,))
+
+        conexao.commit()
+        print("Operação concluída.")
+    finally:
+        cursor.close()
+        fechar_conexao(conexao)
+
     return
 
 
@@ -146,6 +187,5 @@ def menu():
             print("Exercicio em estrutura base (return vazio).")
         else:
             print("Opcao invalida. Tente novamente.")
-       
 menu()
 

@@ -261,7 +261,7 @@ def listar_vendas_completas():
         vendas =  cursor.fetchall()
         
         for p in vendas:
-            id_vendedor, data_hora,desconto, valor_final = p[1]
+            id_vendedor, data_hora,desconto, valor_final = p[1], p[2], p[3], p[4]
             print(f"{p[0]} | {id_vendedor} | {data_hora} | {desconto} | {valor_final} ")
 
     finally:

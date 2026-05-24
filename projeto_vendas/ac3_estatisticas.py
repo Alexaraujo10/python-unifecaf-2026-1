@@ -323,4 +323,5 @@ def menu_relatorios():
                 print(resultado)
         else:
             print("Opcao invalida. Tente novamente.")
+            
 menu_relatorios()

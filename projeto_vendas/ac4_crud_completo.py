@@ -46,7 +46,6 @@ def listar_produtos():
         print('Lista de Produtos:  ')
 
         produtos =  cursor.fetchall()
-        print(produtos)
         for p in produtos:
             descricao, preco = p[1], p[2]
             print(f"{p[0]} | {descricao} | R$ {preco:.2f}")
@@ -63,21 +62,23 @@ def atualizar_produto():
     # Exercicio 3: atualizar descricao e/ou preco de um produto existente por id.
     print('=== Atualize um Produto ===')
 
+    while True: 
+        try: 
+            attproduto = input('Digite o novo nome: ')
+            idproduto = int(input('Digite o id do produto: '))
+            attpreco = float(input('Digite o novo preço: '))
+            break
+        except:
+            print("Dados Invalidos, Tente Novamente!!")
+
     try:
         conexao = conectar()
         cursor = conexao.cursor()
 
-        attproduto = input('Digite o novo nome: ')
-        attpreco = float(input('Digite o novo preço: '))
-
-
-        cursor.execute(
-
-    
-
-
-        )
-
+        cursor.execute("update produtos set descricao = %s where id=%s ;", (attproduto, idproduto,))
+        cursor.execute("update produtos set preco = %s where id=%s ;", (attpreco, idproduto,))
+        conexao.commit()
+        print("Produto atualizado com sucesso")
     finally:
         cursor.close()
         fechar_conexao(conexao)
@@ -87,24 +88,29 @@ def atualizar_produto():
 
 def excluir_produto():
     # Exercicio 4: excluir um produto por id, tratando dependencias em vendas_produtos.
+
+        
+    conexao = conectar()
+    cursor = conexao.cursor()
     
-    try:
-        conexao = conectar()
-        cursor = conexao.cursor()
-        deldependencia = int(input('Digite o id do produto: '))
-        delproduto = int(input('Digite o id do produto: '))
-
-        # remover dependências em vendas_produtos primeiro
-        cursor.execute("DELETE FROM vendas_produtos WHERE id_produto = %s", (deldependencia,))
-        # remover o produto
+    while True:
+        try:
+            delproduto = int(input('Digite o id do produto: '))
+            break
+        except:
+            print("Id invalido!!")
+        
+    cursor.execute("select * from vendas where id= %s", (delproduto,) )
+    produtos = cursor.fetchone()
+    if not produtos:
         cursor.execute("DELETE FROM produtos WHERE id = %s", (delproduto,))
+        print("Produto deletado")
+    else: 
+        print("O Produto nao pode ser apagado")
 
-        conexao.commit()
-        print("Operação concluída.")
-    finally:
-        cursor.close()
-        fechar_conexao(conexao)
-
+    conexao.commit()
+    cursor.close()
+    fechar_conexao(conexao)
     return
 
 
@@ -112,21 +118,102 @@ def excluir_produto():
 
 def criar_vendedor():
     # Exercicio 5: cadastrar um novo vendedor na tabela vendedores.
+    print("=== Registre um Vendedor ===")
+    try:
+        conexao = conectar()
+        cursor = conexao.cursor()
+        vendedor = input('Digite o nome do Vendedor: ')
+
+        cursor.execute(
+            "INSERT INTO vendedores (nome ) VALUES (%s)", 
+            (vendedor,)
+        )
+        conexao.commit() 
+        print( "Vendedor registrado!")
+    
+    finally:
+        cursor.close()
+        fechar_conexao(conexao)    
     return
 
 
 def listar_vendedores():
     # Exercicio 6: listar todos os vendedores cadastrados.
-    return
+    print('=== Lista de vendedores  ===')
+    
+    try:
+        conexao = conectar()
+        cursor = conexao.cursor()
+
+        cursor.execute(
+            "select * from vendedores"
+        )
+        print('Lista de Vendedores:  ')
+
+        vendedores =  cursor.fetchall()
+        for p in vendedores:
+            nome = p[1]
+            print(f"{p[0]} | {nome} ")
+
+    finally:
+        cursor.close()
+        fechar_conexao(conexao)
+    return 
+    
 
 
 def atualizar_vendedor():
     # Exercicio 7: atualizar o nome de um vendedor existente por id.
+    print('=== Atualize um Vendedor ===')
+
+    while True: 
+        try: 
+            attvendedor = input('Digite o novo nome: ')
+            idvendedor = int(input('Digite o id do vendedor: '))
+            
+            break
+        except:
+            print("Dados Invalidos, Tente Novamente!!")
+
+    try:
+        conexao = conectar()
+        cursor = conexao.cursor()
+
+        cursor.execute("update vendedores set nome = %s where id=%s ;", (attvendedor, idvendedor,))
+
+        conexao.commit()
+        print("Vendedor atualizado com sucesso")
+    finally:
+        cursor.close()
+        fechar_conexao(conexao)
+
     return
 
 
 def excluir_vendedor():
     # Exercicio 8: excluir vendedor por id, validando se possui vendas vinculadas.
+    print("=== Exclua um Vendedor === ")
+    conexao = conectar()
+    cursor = conexao.cursor()
+    
+    while True:
+        try:
+            delvendedor = int(input('Digite o id do vendedor: '))
+            break
+        except:
+            print("Id invalido!!")
+        
+    cursor.execute("select * from vendas where id= %s", (delvendedor,) )
+    vendedor = cursor.fetchone()
+    if not vendedor:
+        cursor.execute("DELETE FROM vendedores WHERE id = %s", (delvendedor,))
+        print("Vendedor deletado")
+    else: 
+        print("O Vendedor nao pode ser apagado")
+
+    conexao.commit()
+    cursor.close()
+    fechar_conexao(conexao)
     return
 
 
@@ -134,21 +221,112 @@ def excluir_vendedor():
 
 def criar_venda_com_itens():
     # Exercicio 9: criar uma venda e inserir itens na tabela vendas_produtos com quantidade e valores.
+
+    print("=== Registre uma Venda ===")
+    try:
+        conexao = conectar()
+        cursor = conexao.cursor()
+        nomevenda= input('Digite o id do Vendedor: ')
+        datavenda = datetime(input("Digite a data e a hora da venda: "))
+        desconto = int(input("Se houve desconto, digite o total de desconto: "))
+        valorfinal = int(input("Digite o Valor final da venda: "))
+
+
+        cursor.execute(
+            "INSERT INTO vendas (id_vendedor, data_e_hora, desconto, valor_final) VALUES (%s, %s, %s, %s),"
+            (nomevenda, datavenda, desconto, valorfinal,)
+        )
+        conexao.commit() 
+        print( "Venda registrado!")
+    
+    finally:
+        cursor.close()
+        fechar_conexao(conexao)    
     return
 
 
 def listar_vendas_completas():
     # Exercicio 10: listar vendas com vendedor e itens (produto, quantidade, valor_unitario, valor_total).
+    print('=== Lista Todas as Vendas  ===')
+    
+    try:
+        conexao = conectar()
+        cursor = conexao.cursor()
+
+        cursor.execute(
+            "select * from vendas"
+        )
+        print('Lista de Vendas:  ')
+
+        vendas =  cursor.fetchall()
+        
+        for p in vendas:
+            id_vendedor, data_hora,desconto, valor_final = p[1]
+            print(f"{p[0]} | {id_vendedor} | {data_hora} | {desconto} | {valor_final} ")
+
+    finally:
+        cursor.close()
+        fechar_conexao(conexao)
     return
 
 
 def atualizar_venda_e_itens():
     # Exercicio 11: atualizar dados da venda (desconto/valor_final) e seus itens.
+    print('=== Atualize uma venda ===')
+
+    while True: 
+        try: 
+            idvenda = int(input('Digite o id da venda: '))
+            idvendedor = int(input("Digite o id do vendedor"))
+            dtahrvenda = int(input('Digite a data e a hora da venda : '))
+            descvenda = int(input("Se houver desconto, digite o desconto da venda: "))
+            valorfinalvenda = int(input("Digite o valor final da venda: "))
+            
+            break
+        except:
+            print("Dados Invalidos, Tente Novamente!!")
+
+    try:
+        conexao = conectar()
+        cursor = conexao.cursor()
+
+        cursor.execute("update vendas set id = %s where id=%s ;", (idvendedor, idvenda,))
+        cursor.execute("update vendas set data_e_hora = %s where id=%s", (dtahrvenda, idvenda))
+        cursor.execute("update vendas set desconto = %s where id=%s",(descvenda, idvenda))
+        cursor.execute("update vendas set valor_final = %s where id=%s", (valorfinalvenda, idvenda))
+
+        conexao.commit()
+        print("Vendedor atualizado com sucesso")
+    finally:
+        cursor.close()
+        fechar_conexao(conexao)
     return
 
 
 def excluir_venda():
     # Exercicio 12: excluir uma venda por id removendo primeiro os itens de vendas_produtos.
+    print("=== Exclua uma Venda === ")
+    conexao = conectar()
+    cursor = conexao.cursor()
+    
+    while True:
+        try:
+            delvenda = int(input('Digite o id da venda: '))
+            break
+        except:
+            print("Id invalido!!")
+        
+    cursor.execute("select * from vendas_produtos where id= %s", (delvenda,) )
+    vendas = cursor.fetchone()
+    if not vendas:
+        cursor.execute("DELETE FROM vendas WHERE id = %s", (delvenda,))
+        print("Venda deletado")
+    else: 
+        print(" A venda nao pode ser apagada")
+
+    conexao.commit()
+    cursor.close()
+    fechar_conexao(conexao)
     return
 
 
